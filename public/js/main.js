@@ -2,7 +2,11 @@ let allUsers = []
 let allContent = []
 let converter = new showdown.Converter({ tables: true })
 let totalVestingShares, totalVestingFundSteem;
-
+const FEEDNAME = 'steemversary'
+const MAINCAT = 'test-123'
+let workoutIcons = {
+  run: '<svg class="workout__icon" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><style>.st0{fill:#010101}</style><path class="st0" d="M42.8 18.7c2.2 0 4.1-1.8 4.1-4.1s-1.8-4.1-4.1-4.1-4.1 1.8-4.1 4.1 1.8 4.1 4.1 4.1zM46.8 24h-6L39 19.7c-.1-.2-.2-.4-.3-.5l-.1-.2-4-4.8L31 10c-.4-.4-.9-.7-1.5-.7h-7.7c-1.1 0-2 .9-2 2s.9 2 2 2h6.8l2.2 2.6-8.5 8.1c-.2.1-.4.3-.6.5-1.3 1.3-1.2 3.4.1 4.7l6.6 6.3-8.6 2.1c-1.1.3-1.7 1.3-1.5 2.4.3 1.1 1.3 1.7 2.4 1.5l12.1-2.9c.2-.1.5-.2.7-.3.9-.6 1.1-1.8.5-2.7V35l-5-7.3 7.2-5 1.7 4c.3.7 1 1.2 1.8 1.2H47c1.1 0 2-.9 2-2-.2-1-1.1-1.9-2.2-1.9z"/><path class="st0" d="M20.2 30.7c-1-1-1.6-2.3-1.8-3.7l-13 11.3c-.9.7-1 2-.3 2.9.7.9 2.1 1.1 3 .4l13-10-.9-.9zM23 17.9c0 .7-.6 1.2-1.2 1.2H11.7c-.7 0-1.2-.6-1.2-1.2 0-.7.6-1.2 1.2-1.2h10.1c.6 0 1.2.5 1.2 1.2zM18.4 22.5c0 .7-.6 1.2-1.2 1.2H7.1c-.7 0-1.2-.6-1.2-1.2 0-.7.6-1.2 1.2-1.2h10.1c.6 0 1.2.6 1.2 1.2zM13.7 27.2c0 .7-.6 1.2-1.2 1.2H2.4c-.7 0-1.2-.6-1.2-1.2 0-.7.6-1.2 1.2-1.2h10.1c.7-.1 1.2.5 1.2 1.2z"/></svg>'
+}
 /**
  * gets totalVestingShares and totalVestingFundSteem from STEEM API to use later
  */
@@ -18,119 +22,38 @@ function getaccounts(usernames){
   })
 }
 
-/**
- * Gets post and comment data for a url slug
- * @function
- * @param {String} url - '/category}/username/permlink'
- */
+function getBlog(username){
+  return steem.api.getDiscussionsByBlogAsync({tag: username, limit: 14})
+}
+
 function getPostAndComments(url) {
-  steem.api.getState(url, (err, result) => {
-    let users = result.accounts;
-    let resultsArray = [];
-    for ( post in result.content ){
-
-      var html = result.content[post].body
-
-      resultsArray.push({
-        id: result.content[post].id,
-        title: result.content[post].root_title,
-        author: result.content[post].author,
-        body: html,
-        json: result.content[post].json_metadata,
-        permlink: result.content[post].permlink,
-        depth: result.content[post].depth,
-        root_comment: result.content[post].root_comment,
-        parent_permlink: result.content[post].parent_permlink,
-        created: result.content[post].created,
-        votes: result.content[post].net_votes,
-        voters: result.content[post].active_votes.map(vote => vote.voter),
-        value: Math.round( parseFloat(result.content[post].pending_payout_value.substring(0,5)) * 100) / 100
-      })
-    }
-
-    // Sort By Date/ID
-    resultsArray = resultsArray.sort((a,b) => {
-      return b.id - a.id
-    });
-
-    // Find Deepest Comment
-    let maxDepthComment = resultsArray.reduce((prev, current) => {
-      return (prev.depth > current.depth) ? prev : current
+  return new Promise(function(resolve, reject) {
+    steem.api.getState(url, (err, result) => {
+      let users = result.accounts;
+      let resultsArray = [];
+      for ( post in result.content ){
+        resultsArray.push({
+          id: result.content[post].id,
+          title: result.content[post].root_title,
+          author: result.content[post].author,
+          body: result.content[post].body,
+          json: result.content[post].json_metadata,
+          permlink: result.content[post].permlink,
+          depth: result.content[post].depth,
+          root_comment: result.content[post].root_comment,
+          parent_permlink: result.content[post].parent_permlink,
+          created: result.content[post].created,
+          votes: result.content[post].net_votes,
+          voters: result.content[post].active_votes.map(vote => vote.voter),
+          value: Math.round( parseFloat(result.content[post].pending_payout_value.substring(0,5)) * 100) / 100
+        })
+      }
+      resultsArray = resultsArray.sort((a,b) => b.id - a.id );
+      resolve(resultsArray)
     })
-
-    // Multi demention array by
-    let resultsByDepth = [];
-    for (var i = 0; i < maxDepthComment.depth + 1; i++) {
-      resultsByDepth.push(resultsArray.filter(elem => {
-        return elem.depth === i
-      }))
-    }
-    // appendComments(resultsByDepth)
   })
 }
 
-/**
- * appends comments to single page after main content
- * @function
- * @param {Array} comments - an Array of comments to a steem post
- */
-function appendComments(comments){
-  $('main').append('<div class="comments"></div>')
-
-    comments.forEach( (postsAtDepth, i, arr) => {
-      postsAtDepth.forEach( (comment, i, arr) => {
-        let template = createCommentTemplate(comment)
-        if ( comment.depth === 1 ) {
-          $('.comments').prepend( template)
-        } else if ( comment.depth  > 1) {
-          var permlink = comment.parent_permlink
-          $('.' + permlink ).append( template)
-        }
-      })
-    })
-}
-
-/**
- * creates the HTML for a comment from a comment object
- * @function
- * @param {Object} post - a comment object from STEEM  getState API
- */
-createCommentTemplate = (post) => {
-      var permlink = post.parent_permlink
-      var html = converter.makeHtml(post.body)
-      var voteMessage = (post.votes > 1 || post.votes == 0 )? 'votes' : 'vote'
-      var voteValue = (post.value > 0) ? '</span> <span>|</span> <span>$' + post.value  + '</span><span>': ''
-      var template = `
-      <div data-post-id="${post.id}"
-      data-permlink="${post.permlink}"
-      data-author="${post.author}"
-      data-title="${post.title}"
-      data-post-depth="${post.depth}"
-      class="comment comment-level-${post.depth} ${post.permlink}">
-        <h4>
-          <a href="/@${post.author}" target="_blank">@${post.author}</a>
-          <span> &middot; </span> <span> ${ moment(post.created).fromNow() } </span>
-        </h4>
-        <p>${ html }</p>
-        <div class="meta">
-          <form method="post">
-            <input type="hidden" name="postId" value="${post.id}">
-            <input type="hidden" name="author" value="${post.author}">
-            <input type="hidden" name="permlink" value="${post.permlink}">
-            <input type="submit" class="vote" value="Vote">
-          </form>
-          <span class="sc-item__divider">|</span>
-          <span class="sc-item__votecount">${post.votes} ${voteMessage} </span>
-        </div>
-      </div>`
-      return template;
-    }
-
-/**
- * format raw user accoutn data from Steem api
- * @function
- * @param {String} username - a single steem username
- */
 function getAccountInfo(username) {
     let userInfo;
 
@@ -185,9 +108,38 @@ function getAccountInfo(username) {
     });
 }
 
-if ($('main').hasClass('single')) {
-  let data = $('main').data()
-  getPostAndComments(`/${data.category}/@${data.username}/${data.permlink}`)
+
+function processPosts(data){
+  let posts = data.filter(post => post.category === MAINCAT)
+  posts.forEach((post, i) => {
+    getPostAndComments(post.url)
+      .then(data => processWorkouts(data))
+  })
+}
+
+function processWorkouts(workouts) {
+    $('.workouts').append(`<div class="workout--date-divider"><p class="workout__date">${workouts[0].created}</p></div>`)
+    workouts.pop() // remove the top level post
+    workouts.forEach((workout) => {
+      $('.workouts').append(createWorkoutTemplate(workout))
+    })
+}
+
+function createWorkoutTemplate(workout){
+  let data = JSON.parse(workout.json)
+  return `
+  <div class="workout">
+    ${workoutIcons[data.workoutType]}
+    <p class="workout__details">${workout.author} &middot; completed a ${data.workoutType} &middot; ${data.distance}${data.distanceUnit}</p>
+    <div class="workout__hearts">&hearts; ${workout.votes}</div>
+  </div>
+  `
+}
+
+
+
+if ($('main').hasClass('index')) {
+  getBlog(FEEDNAME).then(data => processPosts(data))
 }
 
 if ($('main').hasClass('profile') ) {
@@ -225,7 +177,7 @@ $('main').on('click', '.vote',(e) => {
   })
 })
 
-$('main').on('click', '.send-comment', (e) => {
+$('main').on('click', '.overlay__submit', (e) => {
   let $comment = $(e.currentTarget)
 
   $.post({
@@ -233,9 +185,12 @@ $('main').on('click', '.send-comment', (e) => {
         dataType: 'json',
         data: {
           parentAuthor: $comment.data('parent'),
-          parentPermlink: $comment.data('parent-permlink'),
           message: $('.comment-message').val(),
-          parentTitle: $comment.data('parent-title')
+          parentTitle: $comment.data('parent-title'),
+          workoutType: 'run',
+          distance: '3.2',
+          distanceUnit: 'km',
+          workoutDuration: '29'
         }
       }, (response) => {
           console.log(response)
