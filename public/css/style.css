@@ -126,3 +126,159 @@ button, input[type="submit"] {
 .btn.load-more-posts {
   display: block;
 }
+
+
+
+/*  Move Club  */
+body {
+  font-family: 'Varela Round', sans-serif;
+}
+
+main {
+  padding-top: 75px;
+  padding-bottom: 150px;
+  background: #fbfbfc;
+  min-height: 100vh;
+
+}
+
+.cta {
+  position: relative;
+  margin-bottom: 15px;
+}
+.cta:hover {
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0,0,0,0.08);
+  background-color: #f8f8f8;
+}
+.cta:hover .cta__path {
+  stroke: #cecece;
+}
+
+.cta__border {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+.cta__path {
+  fill: none;
+  stroke: #ebebeb;
+  stroke-width: 5;
+  stroke-dasharray: 10, 10;
+  transition: all 200ms ease-in;
+}
+
+.cta__title {
+  padding: 35px 0 40px;
+  text-align: center;
+  color: #595959;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+
+.cta__icon {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  transform: translateY(10px);
+  fill: #595959;
+}
+
+
+.dashboard {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.view {
+  text-align: center;
+  margin-bottom: 75px;
+}
+.view__type {
+  margin: 5px;
+  color: #c6c6c6;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.view__type--active {
+  color: #595959;
+}
+
+.view__divider {
+  color: #c6c6c6;
+  margin: 0 10px;
+}
+.view__icon {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-right: 5px;
+  transform: translateY(4px);
+  fill: #c6c6c6;
+  stroke: #c6c6c6;
+}
+.view__icon--active {
+  fill: #595959;
+  stroke: #595959;
+}
+
+.workout {
+  margin: 15px;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.07);
+  padding: 15px;
+  border-radius: 3px;
+  position: relative;
+  transition: all 200ms ease-in;
+}
+.workout:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 11px rgba(0,0,0,0.09);
+}
+.workout__icon {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+  float: left;
+}
+.workout__icon path{
+  fill: #595959;
+}
+.workout__hearts {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 15px;
+  border-left: solid 1px #f3f3f3;
+  cursor: pointer;
+  color: #595959;
+  transition: all 300ms ease-in;
+}
+.workout__hearts:hover {
+  background-color: #fafafa;
+  color: #fa7b7b;
+}
+
+.workout__details {
+  display: inline-block;
+  color: #595959;
+  margin-bottom: 0;
+  transform: translateY(2px);
+}
+
+.workout__date {
+  text-align: center;
+  padding: 15px;
+  margin-bottom: 0;
+  font-weight: 700;
+  color: #a5a2a2;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 14px;
+}
