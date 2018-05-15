@@ -571,3 +571,13 @@ $('.load-more-posts').on('click', (e) => {
   let tag = $('main').data('tag') || ''
   getMoreContent(filter, tag)
 })
+
+
+$('.overlay').hide()
+
+$('.cta').on('click', (e) => {
+  $('.overlay__bg').show(200)
+  $('.overlay').show(100,() => {
+    $('.overlay').addClass('overlay--active')
+  })
+})

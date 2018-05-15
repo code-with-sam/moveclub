@@ -256,6 +256,7 @@ main {
   top: 0;
   padding: 15px;
   border-left: solid 1px #f3f3f3;
+  border-left: solid 1px #f3f3f3;
   cursor: pointer;
   color: #595959;
   transition: all 300ms ease-in;
@@ -281,4 +282,160 @@ main {
   letter-spacing: 1px;
   text-transform: uppercase;
   font-size: 14px;
+}
+
+.overlay__bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom:0;
+  display: none;
+  background: rgba(255,255,255,0.3);
+}
+
+.overlay {
+  position: fixed;
+  top: 175px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 120px;
+  background: #fff;
+  transition-delay: 0ms;
+  transition: all 100ms ease-in;
+  opacity: 0;
+  box-shadow: 0 1px 25px rgba(0,0,0,0.15);
+  border: solid 1px #f3f3f3;
+  border-radius: 3px
+}
+.overlay--active {
+  width: 600px;
+  height: auto;
+  opacity: 1
+}
+
+.overlay__auth {
+  text-align: center;
+  padding: 100px;
+}
+.overlay__auth-message {
+  max-width: 70%;
+  margin: 0 auto;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 40px;
+}
+
+.button {
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  padding: 4px 16px;
+  border: solid 1px #d7d7d7;
+  background-color: #efefef;
+  color: #5d5d5d;
+  border-radius: 4px;
+}
+.button:hover {
+  text-decoration: none;
+  color: #333;
+}
+
+.button--steemconnect {
+  padding: 8px 16px 8px 10px;
+  border: solid 1px #5aa9ed;
+  background-color: #5ab3ff;
+  color: #fff;
+}
+.button--steemconnect:hover {
+  color: #fafafa;
+  text-decoration: none;
+  background-color: #5da1db;
+  border: solid 1px #5aa9ed;
+}
+.button--steemconnect img {
+  width: 16px;
+  margin-right: 10px;
+}
+
+
+
+
+
+
+.overlay__form {
+  padding: 30px 40px 30px;
+}
+.overlay__profile {
+  text-align: center;
+}
+.overlay__avatar {
+  display: inline-block;
+  border-radius: 50%;
+  border: solid 2px #cecece;
+}
+.overlay__username {
+  display: inline-block;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #ccc;
+  margin-left: 10px;
+}
+
+.overlay__activities {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.overlay__activity {
+  display: inline-block;
+  padding: 20px 30px;
+  cursor: pointer;
+  margin: 0 7px;
+  background: #efebeb;
+  border-radius: 3px;
+  transition: all 100ms ease-in;
+}
+
+.activity__icon {
+  width: 30px;
+  height: 30px;
+  transform: translateY(4px);
+}
+.overlay__activity:hover {
+  box-shadow: 0 0 10px rgba(0,0,0,0.08);
+}
+
+.activity__icon path {
+  fill: #595959;
+}
+.overlay__activity:hover .activity__icon path {
+  fill: #000;
+}
+
+.overlay__details {
+  padding: 30px 30px 0;
+  text-align: center;
+}
+
+.details__group {
+  text-align: center;
+}
+.details__group label, .details__group input{
+  display: inline-block;
+  width: auto;
+}
+.details__group select{
+  height: 30px;
+}
+.details__group input {
+  margin: 15px;
+  width: 60px;
+  padding: 2px 5px;
+}
+
+.overlay__submit {
+  margin-bottom: 0;
+  background: #515151;
+  width: 65%;
+  color: white;
+  padding: 10px;
+
 }
