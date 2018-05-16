@@ -157,6 +157,10 @@ main {
   background-color: #fafafa;
   color: #fa7b7b;
 }
+.workout__hearts--voted-true {
+  color: #fa7b7b;
+  cursor: not-allowed;
+}
 
 .workout__details {
   display: inline-block;

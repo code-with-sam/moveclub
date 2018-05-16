@@ -48,7 +48,7 @@ router.post('/vote', util.isAuthenticatedJSON, (req, res) => {
     let permlink = req.body.permlink
     let weight = 10000
 
-    steem.vote(voter, author, permlink, weight, function (err, steemResponse) {
+    steem.vote(voter, author, permlink, weight, (err, steemResponse) => {
       if (err) {
           res.json({ error: err.error_description })
       } else {

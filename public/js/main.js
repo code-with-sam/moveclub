@@ -163,16 +163,24 @@ if ($('main').hasClass('profile') ) {
 
 $('main').on('click', '.vote',(e) => {
   let $voteButton = $(e.currentTarget)
+  let workout = $(e.currentTarget).parent().data()
+  $voteButton.html('<img class="loading-spinner" src="/img/spinner.gif">')
+
   e.preventDefault()
   $.post({
     url: '/post/vote',
     dataType: 'json',
-    data:  $(e.currentTarget).parent().serialize()
+    data:  {
+      postId: workout.postid,
+      author: workout.athlete,
+      permlink: workout.permlink
+    }
   }, (response) => {
     if (response.error) {
       $(`<span>${response.error.error_description}</span>`).insertAfter($voteButton)
     } else {
-      $('<span>Voted!</span>').insertAfter($voteButton)
+      $voteButton.addClass('workout__hearts--voted-true')
+      $voteButton.html(`&hearts; ${parseInt(workout.votes) + 1}`)
     }
   })
 })
