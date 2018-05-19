@@ -1,3 +1,6 @@
+// style imports via parcel
+import "../scss/main.scss"
+
 let allUsers = []
 let allContent = []
 let converter = new showdown.Converter({ tables: true })
@@ -34,7 +37,7 @@ function getPostAndComments(url) {
     steem.api.getState(url, (err, result) => {
       let users = result.accounts;
       let resultsArray = [];
-      for ( post in result.content ){
+      for ( let post in result.content ){
         resultsArray.push({
           id: result.content[post].id,
           title: result.content[post].root_title,
