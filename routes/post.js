@@ -35,11 +35,16 @@ router.post('/comment',  util.isAuthenticatedJSON, (req, res) => {
     let body = `${POST_TITLE} - @${author} - ${req.body.workoutType} - ${req.body.distance}${req.body.distanceUnit} - ${req.body.workoutDuration}mins`
     let parentAuthor = PARENT
     let parentPermlink = PERMLINK
+    let s = req.body.workoutDurationSeconds !== '' ? req.body.workoutDurationSeconds  : 0
+    let m = req.body.workoutDurationMinutes !== '' ? req.body.workoutDurationMinutes  : 0
+    let h = req.body.workoutDurationHours !== '' ? req.body.workoutDurationHours  : 0
+    let workoutDurationInSeconds = parseInt(s) + (parseInt(m) * 60) + (parseInt(h) * 60 * 60 )
     let customJson = {
+      app: 'move.app/v0.1.0',
       workoutType: req.body.workoutType,
       distance: req.body.distance,
       distanceUnit: req.body.distanceUnit,
-      workoutDuration: req.body.workoutDuration
+      workoutDurationInSeconds: workoutDurationInSeconds
     }
 
     steem.comment(parentAuthor, parentPermlink, author, permlink, title, body, customJson, (err, steemResponse) => {

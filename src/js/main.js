@@ -226,7 +226,9 @@ $('main').on('click', '.overlay__submit', (e) => {
           workoutType: $('.input__workoutType').data('workout'),
           distance: $('.input__distance').val(),
           distanceUnit: $('.input__distanceUnit').val(),
-          workoutDuration: $('.input__workoutDuration').val()
+          workoutDurationSeconds: $('.input__workoutDuration--seconds').val(),
+          workoutDurationHours: $('.input__workoutDuration--hours').val(),
+          workoutDurationMinutes: $('.input__workoutDuration--minutes').val()
         }
       }, (response) => {
           console.log(response)
@@ -243,11 +245,15 @@ $('.overlay__activity').on('click', (e) => {
   $('.overlay__activity').removeClass('overlay__activity--active')
   $(e.currentTarget).addClass('overlay__activity--active')
   let workout = $(e.currentTarget).data('workout')
+  if(workout === 'workout') $('.input__distance').parent().hide()
+  if(workout !== 'workout') $('.input__distance').parent().show()
   $('.input__workoutType').data('workout', workout)
+  $('.activity__type').text(workout)
 })
 
 $('.overlay__bg').on('click', (e) => {
   $('.overlay, .overlay__bg').fadeOut(300, () => $('.overlay, .overlay__bg').hide())
+  $('.activity__type').text('')
 })
 
 $('.overlay').hide()
