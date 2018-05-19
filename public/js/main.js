@@ -173,7 +173,8 @@ $('main').on('click', '.vote',(e) => {
     data:  {
       postId: workout.postid,
       author: workout.athlete,
-      permlink: workout.permlink
+      permlink: workout.permlink,
+      weight: parseInt($('.vote-weight__value').data('weight')) * 100
     }
   }, (response) => {
     if (response.error) {
@@ -219,4 +220,21 @@ $('.cta').on('click', (e) => {
   $('.overlay').show(100,() => {
     $('.overlay').addClass('overlay--active')
   })
+})
+
+
+$('.vote-weight').on('click', (e) => {
+  $('.vote__slider').show()
+})
+
+$('.slider__close').on('click', (e) => {
+  $('.vote__slider').hide()
+})
+
+
+$('nav').on('input', '.slider__input', (e) => {
+  let weight = $('.slider__input').val()
+  $('.vote-weight__value').text(weight + '%')
+  $('.vote-weight__value').data('vote-weight', weight)
+  console.log( $('.vote-weight__value').data()  )
 })
