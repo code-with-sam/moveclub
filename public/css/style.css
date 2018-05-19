@@ -353,14 +353,17 @@ main {
   height: 30px;
   transform: translateY(4px);
 }
-.overlay__activity:hover {
+.overlay__activity:hover,
+.overlay__activity--active {
+  background-color: #fcc45b;
   box-shadow: 0 0 10px rgba(0,0,0,0.08);
 }
 
 .activity__icon path {
   fill: #595959;
 }
-.overlay__activity:hover .activity__icon path {
+.overlay__activity:hover .activity__icon path,
+ .overlay__activity--active .activity__icon path{
   fill: #000;
 }
 
@@ -402,7 +405,7 @@ main {
   top: 70px;
   right: 10px;
   background: #fff;
-  padding: 20px 30px;
+  padding: 20px 20px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   display: none;
 }
@@ -436,7 +439,7 @@ main {
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  background: #4f79ff;
+  background: #fa7b7b;
   cursor: pointer;
   -webkit-appearance: none;
   margin-top: -3.6px;
@@ -459,7 +462,7 @@ main {
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  background: #4f79ff;
+  background: #fa7b7b;
   cursor: pointer;
 }
 .vote__slider input[type=range]::-ms-track {
@@ -488,7 +491,7 @@ main {
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  background: #4f79ff;
+  background: #fa7b7b;
   cursor: pointer;
 }
 .vote__slider input[type=range]:focus::-ms-fill-lower {
