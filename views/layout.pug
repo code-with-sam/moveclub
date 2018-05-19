@@ -6,7 +6,14 @@ html
     link(rel='stylesheet', href='/css/style.css')
     link(href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet")
   body.cf
+    include partials/nav
     block content
+    footer
+      .footer__bar
+        a.footer__link(href="/about") About
+        a.footer__link(href="/attributions") Attributions
+        span.footer__tagline Made with &hearts; by a human named Sam ✌️
+
     script(src="https://code.jquery.com/jquery-3.2.1.min.js"
   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
   crossorigin="anonymous")
