@@ -24,13 +24,7 @@ steem.api.getDynamicGlobalProperties((err, result) => {
   totalVestingFundSteem = result.total_vesting_fund_steem;
 })
 
-
-function getaccounts(usernames){
-  steem.api.getAccounts(usernames, (err, result) => {
-    allUsers = allUsers.concat(result)
-  })
-}
-
+// Alias for getting the latest posts from a specific user defaulting to 14 Posts
 function getBlog(username){
   return steem.api.getDiscussionsByBlogAsync({tag: username, limit: 14})
 }
@@ -64,14 +58,9 @@ function getPostAndComments(url) {
 }
 
 function getAccountInfo(username) {
-    let userInfo;
-
     return new Promise((resolve, reject) => {
-
       steem.api.getAccounts([username], (err, result) => {
-
         let user = result[0]
-
         let jsonData;
 
         try {jsonData = JSON.parse(user.json_metadata).profile} catch(err) { console.log(err)}
