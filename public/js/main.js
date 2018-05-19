@@ -117,56 +117,78 @@ function getAccountInfo(username) {
     });
 }
 
-
-function processPosts(data){
+//
+// @data - Array - list of posts from STEEM API
+function processPosts(data, username){
   let posts = data.filter(post => post.category === MAINCAT)
-  posts.forEach((post, i) => {
-    getPostAndComments(post.url)
-      .then(data => processWorkouts(data))
-  })
+  if(username){
+    console.log(username)
+    posts.forEach((post, i) => getPostAndComments(post.url).then(data => processWorkoutsByUsername(data, username)))
+  } else {
+    posts.forEach((post, i) => getPostAndComments(post.url).then(data => processWorkouts(data)))
+  }
 }
 
 function processWorkouts(workouts) {
-    $('.workouts').append(`<div class="workout--date-divider"><p class="workout__date">${workouts[0].created}</p></div>`)
     workouts.pop() // remove the top level post
+    workouts.reverse()
     workouts.forEach((workout) => {
-      $('.workouts').append(createWorkoutTemplate(workout))
+      $('.workouts').prepend(createWorkoutTemplate(workout))
     })
+    $('.workouts').prepend(`<div class="workout--date-divider"><p class="workout__date">${workouts[0].created}</p></div>`)
+}
+
+function processWorkoutsByUsername(workouts, username ){
+  workouts = workouts.filter(w => w.author === username)
+  if (workouts.length > 0) $('.workouts').append(`<div class="workout--date-divider"><p class="workout__date">${workouts[0].created}</p></div>`)
+  if (workouts.length === 0) $('.workouts').append('<h5 class="profile__subheading">No Activity To Display...</h5>')
+  workouts.forEach((workout) => {
+    $('.workouts').append(createWorkoutTemplate(workout))
+  })
 }
 
 function createWorkoutTemplate(workout){
+  console.log(workout)
   let data = JSON.parse(workout.json)
+  let user = $('main').data('user')
+  let voted = false
+  if (user) voted = workout.voters.indexOf(user.name) > -1 ? true : false
+
   return `
-  <div class="workout">
+  <div class="workout"
+    data-postid="${workout.id}"
+    data-athlete="${workout.author}"
+    data-permlink="${workout.permlink}"
+    data-votes="${workout.votes}"
+  >
     ${workoutIcons[data.workoutType]}
-    <p class="workout__details">${workout.author} &middot; completed a ${data.workoutType} &middot; ${data.distance}${data.distanceUnit}</p>
-    <div class="workout__hearts">&hearts; ${workout.votes}</div>
+    <p class="workout__details"><a href="/@${workout.author}">@${workout.author}</a> &middot; completed a ${data.workoutType} &middot; ${data.distance}${data.distanceUnit}</p>
+    <div class="workout__hearts vote workout__hearts--voted-${voted}">&hearts; ${workout.votes}</div>
   </div>
   `
 }
 
-
-
-if ($('main').hasClass('index')) {
-  getBlog(FEEDNAME).then(data => processPosts(data))
-}
-
-if ($('main').hasClass('profile') ) {
+function displayProfilePage(){
   let username = $('.profile').data('username')
   getAccountInfo(username).then(data => {
     data.cover = data.cover || 'http://placehold.it/1200x300?text=-'
     let template =
-    `<header class="profile__header" style="background-image: url(${data.cover})">
-      <h2>${data.name} [${data.rep}]</h2>
-      <img src="${data.image}" width="100px">
-      <h5>Followers: ${data.followerCount} - Following: ${data.followingCount}</h5>
-      </header>
+    `<div class="profile__header">
+      <img class="profile__avatar" src="${data.image}" width="100px">
+      <h3 class="profile__heading">@${data.name}</h2>
+      <h5 class="profile__subheading">Followers: ${data.followerCount}</h5>
+      <h5 class="profile__subheading">Following: ${data.followingCount}</h5>
+      </div>
     `
-    $('main').prepend(template)
+    $('.profile__info').prepend(template)
+    getBlog(FEEDNAME).then(data => processPosts(data, username))
   })
-  let query = { tag: username, limit: 10 }
-  getBlog(query, true)
 }
+
+
+// Fire page specific actions
+if (INDEXPAGE) getBlog(FEEDNAME).then(data => processPosts(data))
+if (PROFILEPAGE) displayProfilePage()
 
 // UI Actions
 
@@ -255,5 +277,4 @@ $('nav').on('input', '.slider__input', (e) => {
   let weight = $('.slider__input').val()
   $('.vote-weight__value').text(weight + '%')
   $('.vote-weight__value').data('vote-weight', weight)
-  console.log( $('.vote-weight__value').data()  )
 })

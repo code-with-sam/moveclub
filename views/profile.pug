@@ -1,10 +1,24 @@
 extends layout
-
 block content
-  include partials/nav
+  main.profile(data-user=user data-username=username)
 
-  main.profile(data-username=`${username}` data-user=`${user}` data-feed-type='user-feed')
-    include partials/profile-nav
-    section.profile-feed
-      .row.feed-insert
-      .btn.btn-primary.load-more-posts Load More Posts
+    section.profile__info
+      hr
+      h3.profile__heading Last 4 Weeks
+      li.profile__item -
+
+    secton.profile__feed
+      h3.profile__heading Latest Activity
+      .workouts
+
+    section.profile__achivements
+
+      h3.profile__heading Groups
+      .profile__block
+        li.profile__item -
+      h3.profile__heading Current Challanges
+      .profile__block
+        li.profile__item -
+      h3.profile__heading Achivements
+      .profile__block
+        li.profile__item -
