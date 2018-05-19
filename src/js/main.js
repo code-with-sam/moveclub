@@ -5,6 +5,7 @@ import steem from 'steem'
 import $ from 'jquery'
 import showdown from 'showdown'
 import moment from 'moment'
+import purify from 'dompurify'
 
 let allUsers = []
 let allContent = []
@@ -144,6 +145,7 @@ function processWorkoutsByUsername(workouts, username ){
 
 function createWorkoutTemplate(workout){
   let data = JSON.parse(workout.json)
+  Object.keys(data).forEach(key => data[key] = purify.sanitize(data[key]))
   let user = $('main').data('user')
   let voted = false
   if (user) voted = workout.voters.indexOf(user.name) > -1 ? true : false
