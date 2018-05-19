@@ -127,25 +127,22 @@ function processPosts(data, username){
 }
 
 function processWorkouts(workouts) {
-    workouts.pop() // remove the top level post
+    let $wrk = $('.workouts')
+    workouts.pop() // Remove the top level post (Posted by moveclub account)
     workouts.reverse()
-    workouts.forEach((workout) => {
-      $('.workouts').prepend(createWorkoutTemplate(workout))
-    })
-    $('.workouts').prepend(`<div class="workout--date-divider"><p class="workout__date">${workouts[0].created}</p></div>`)
+    workouts.forEach( workout => $wrk.prepend(createWorkoutTemplate(workout)))
+    $wrk.prepend(`<div class="workout--date-divider"><p class="workout__date">${moment(workouts[0].created).fromNow()}</p></div>`)
 }
 
 function processWorkoutsByUsername(workouts, username ){
+  let $wrk = $('.workouts')
   workouts = workouts.filter(w => w.author === username)
   if (workouts.length > 0) $('.workouts').append(`<div class="workout--date-divider"><p class="workout__date">${workouts[0].created}</p></div>`)
   if (workouts.length === 0) $('.workouts').append('<h5 class="profile__subheading">No Activity To Display...</h5>')
-  workouts.forEach((workout) => {
-    $('.workouts').append(createWorkoutTemplate(workout))
-  })
+  workouts.forEach( workout => $wrk.append(createWorkoutTemplate(workout)))
 }
 
 function createWorkoutTemplate(workout){
-  console.log(workout)
   let data = JSON.parse(workout.json)
   let user = $('main').data('user')
   let voted = false
