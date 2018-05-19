@@ -3,7 +3,15 @@ let router = express.Router();
 
 /* GET home page. */
 router.get('/', (req, res, next) =>  {
-  res.render('index', { title: 'SteemConnect Boilerplate' });
+  res.render('index', { title: 'Move Club - Get Rewarded for using your body' });
+});
+
+router.get('/about', (req, res, next) =>  {
+  res.render('about', { title: 'Move Club | About' });
+});
+
+router.get('/attributions', (req, res, next) =>  {
+  res.render('attributions', { title: 'Move Club | Attributions' });
 });
 
 /* GET a users profile page. */
