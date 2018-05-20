@@ -131,13 +131,14 @@ function processWorkouts(workouts) {
     let $wrk = $('.workouts')
     workouts.pop() // Remove the top level post (Posted by moveclub account)
     workouts.reverse()
+    workouts = workouts.filter(w => isFromWorkoutClub(w))
     workouts.forEach( workout => $wrk.prepend(createWorkoutTemplate(workout)))
     $wrk.prepend(`<div class="workout--date-divider"><p class="workout__date">${moment(workouts[0].created).fromNow()}</p></div>`)
 }
 
 function processWorkoutsByUsername(workouts, username ){
   let $wrk = $('.workouts')
-  workouts = workouts.filter(w => w.author === username)
+  workouts = workouts.filter(w => w.author === username && isFromWorkoutClub(w))
   if (workouts.length > 0) $('.workouts').append(`<div class="workout--date-divider"><p class="workout__date">${workouts[0].created}</p></div>`)
   if (workouts.length === 0) $('.workouts').append('<h5 class="profile__subheading">No Activity To Display...</h5>')
   workouts.forEach( workout => $wrk.append(createWorkoutTemplate(workout)))
@@ -162,6 +163,16 @@ function createWorkoutTemplate(workout){
     <div class="workout__hearts vote workout__hearts--voted-${voted}">&hearts; ${workout.votes}</div>
   </div>
   `
+}
+
+function isFromWorkoutClub(workout) {
+  if (workout.json === '' || workout.json === '{}') return false
+  let json = JSON.parse(workout.json)
+  if (json.app.includes(APPNAME)) {
+    return true
+  } else {
+    return false
+  }
 }
 
 function displayProfilePage(){
