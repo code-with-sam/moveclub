@@ -201,7 +201,7 @@ $('main').on('click', '.vote',(e) => {
       postId: workout.postid,
       author: workout.athlete,
       permlink: workout.permlink,
-      weight: parseInt($('.vote-weight__value').data('weight')) * 100
+      weight: parseInt($('.vote-weight__value').data('vote-weight')) * 100
     }
   }, (response) => {
     if (response.error) {

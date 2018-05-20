@@ -16,7 +16,7 @@ router.post('/vote', util.isAuthenticatedJSON, (req, res) => {
     let voter = req.session.steemconnect.name
     let author = req.body.author
     let permlink = req.body.permlink
-    let weight = req.body.weight
+    let weight = parseInt(req.body.weight)
 
     steem.vote(voter, author, permlink, weight, (err, steemResponse) => {
       if (err) {
