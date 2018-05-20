@@ -2,13 +2,13 @@ let express = require('express');
 let util = require('../modules/util');
 let steem = require('../modules/steemconnect')
 let router = express.Router();
-const PARENT = 'steemversary'
-// Should update everyday
-// this creates the daily group of workouts
-// can be a deault post about joining Move Club
-// different each day of the week or list featured users/achivemnts/awards
-const PERMLINK = 'test-content' // post permlink
-const POST_TITLE = 'Move Club Workout'
+const PARENT = 'move-club.data'
+const PERMLINK = 'move-club-data-testing-beta' // post permlink
+const POST_TITLE = 'move-club'
+// POST could update everyday?
+//  - this then creates the daily group of workouts
+//  - can be a default post about joining Move Club
+//  - different each day of the week or list featured users/achivemnts/awards?
 
 /* POST a vote broadcast to STEEM network. */
 router.post('/vote', util.isAuthenticatedJSON, (req, res) => {

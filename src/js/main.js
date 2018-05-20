@@ -11,13 +11,13 @@ let allUsers = []
 let allContent = []
 let converter = new showdown.Converter({ tables: true })
 let totalVestingShares, totalVestingFundSteem;
-const FEEDNAME = 'steemversary'
-const MAINCAT = 'test-123'
+const FEEDNAME = 'move-club.data'
+const MAINCAT = 'move-club'
+const APPNAME = 'move.app'
 
 // PAGES
 const INDEXPAGE = $('main').hasClass('index')
 const PROFILEPAGE = $('main').hasClass('profile')
-
 
 let workoutIcons = {
   run: '<svg class="workout__icon" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><style>.st0{fill:#010101}</style><path class="st0" d="M42.8 18.7c2.2 0 4.1-1.8 4.1-4.1s-1.8-4.1-4.1-4.1-4.1 1.8-4.1 4.1 1.8 4.1 4.1 4.1zM46.8 24h-6L39 19.7c-.1-.2-.2-.4-.3-.5l-.1-.2-4-4.8L31 10c-.4-.4-.9-.7-1.5-.7h-7.7c-1.1 0-2 .9-2 2s.9 2 2 2h6.8l2.2 2.6-8.5 8.1c-.2.1-.4.3-.6.5-1.3 1.3-1.2 3.4.1 4.7l6.6 6.3-8.6 2.1c-1.1.3-1.7 1.3-1.5 2.4.3 1.1 1.3 1.7 2.4 1.5l12.1-2.9c.2-.1.5-.2.7-.3.9-.6 1.1-1.8.5-2.7V35l-5-7.3 7.2-5 1.7 4c.3.7 1 1.2 1.8 1.2H47c1.1 0 2-.9 2-2-.2-1-1.1-1.9-2.2-1.9z"/><path class="st0" d="M20.2 30.7c-1-1-1.6-2.3-1.8-3.7l-13 11.3c-.9.7-1 2-.3 2.9.7.9 2.1 1.1 3 .4l13-10-.9-.9zM23 17.9c0 .7-.6 1.2-1.2 1.2H11.7c-.7 0-1.2-.6-1.2-1.2 0-.7.6-1.2 1.2-1.2h10.1c.6 0 1.2.5 1.2 1.2zM18.4 22.5c0 .7-.6 1.2-1.2 1.2H7.1c-.7 0-1.2-.6-1.2-1.2 0-.7.6-1.2 1.2-1.2h10.1c.6 0 1.2.6 1.2 1.2zM13.7 27.2c0 .7-.6 1.2-1.2 1.2H2.4c-.7 0-1.2-.6-1.2-1.2 0-.7.6-1.2 1.2-1.2h10.1c.7-.1 1.2.5 1.2 1.2z"/></svg>',
@@ -120,7 +120,6 @@ function getAccountInfo(username) {
 function processPosts(data, username){
   let posts = data.filter(post => post.category === MAINCAT)
   if(username){
-    console.log(username)
     posts.forEach((post, i) => getPostAndComments(post.url).then(data => processWorkoutsByUsername(data, username)))
   } else {
     posts.forEach((post, i) => getPostAndComments(post.url).then(data => processWorkouts(data)))
@@ -150,7 +149,6 @@ function createWorkoutTemplate(workout){
   let user = $('main').data('user')
   let voted = false
   if (user) voted = workout.voters.indexOf(user.name) > -1 ? true : false
-
   return `
   <div class="workout"
     data-postid="${workout.id}"
@@ -178,7 +176,6 @@ function isFromWorkoutClub(workout) {
 function displayProfilePage(){
   let username = $('.profile').data('username')
   getAccountInfo(username).then(data => {
-    data.cover = data.cover || 'http://placehold.it/1200x300?text=-'
     let template =
     `<div class="profile__header">
       <img class="profile__avatar" src="${data.image}" width="100px">
