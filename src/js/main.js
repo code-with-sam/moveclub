@@ -164,6 +164,8 @@ function createWorkoutTemplate(workout){
 function isFromWorkoutClub(workout) {
   if (workout.json === '' || workout.json === '{}') return false
   let json = JSON.parse(workout.json)
+  if (!json.hasOwnProperty('app')) return false
+  if (typeof json.app !== 'string') return false
   if (json.app.includes(APPNAME)) {
     return true
   } else {
