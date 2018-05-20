@@ -12,6 +12,7 @@ let auth = require('./routes/auth');
 let post = require('./routes/post');
 
 let config = require('./config')
+let env = require('dotenv').config()
 
 let util = require('./modules/util')
 
