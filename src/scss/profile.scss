@@ -1,0 +1,45 @@
+.profile__info {
+  width: 20%;
+  float: left;
+  padding: 0 15px;
+}
+
+.profile__achivements {
+  width: 25%;
+  float: left;
+  padding: 0 15px;
+}
+
+.profile__feed {
+  width: 50%;
+  float: left;
+  padding: 0 30px 0 15px;
+}
+
+.profile__avatar {
+  border-radius: 50%;
+  border: solid 3px #ccc;
+  margin-bottom: 20px;
+}
+
+.profile__heading {
+  color: #8b8b8b;
+  font-size: 1.5rem;
+}
+
+.profile__subheading {
+  color: #8b8b8b;
+  font-size: 0.95rem;
+}
+
+.profile__item {
+  color: #8b8b8b;
+  list-style: none;
+}
+
+.profile__block {
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background: #fff;
+  padding: 15px;
+  margin: 5px 0 40px;
+}
