@@ -53,7 +53,8 @@ router.post('/comment',  util.isAuthenticatedJSON, (req, res) => {
       } else {
         res.json({
           msg: 'Posted To Steem Network',
-          res: steemResponse
+          permlink: permlink,
+          data: steemResponse
         })
       }
     });

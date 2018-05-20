@@ -189,6 +189,12 @@ function displayProfilePage(){
   })
 }
 
+function notificationTimeout(){
+  setTimeout(() => {
+    $('.notification').fadeOut(300)
+  }, 3000)
+}
+
 
 // Fire page specific actions
 if (INDEXPAGE) getBlog(FEEDNAME).then(data => processPosts(data))
@@ -213,7 +219,9 @@ $('main').on('click', '.vote',(e) => {
     }
   }, (response) => {
     if (response.error) {
-      $(`<span>${response.error.error_description}</span>`).insertAfter($voteButton)
+      $(`<span class="notification">${response.error.error_description}</span>`).insertAfter($voteButton.parent())
+      $voteButton.html(`&hearts; ${parseInt(workout.votes)}`)
+      notificationTimeout()
     } else {
       $voteButton.addClass('workout__hearts--voted-true')
       $voteButton.html(`&hearts; ${parseInt(workout.votes) + 1}`)
@@ -223,7 +231,12 @@ $('main').on('click', '.vote',(e) => {
 
 $('main').on('click', '.overlay__submit', (e) => {
   let $comment = $(e.currentTarget)
-
+  let user = $('main').data('user')
+  let workoutType = $('.input__workoutType').data('workout')
+  let distance = $('.input__distance').val()
+  let distanceUnit = $('.input__distanceUnit').val()
+  $('.overlay__submit').hide()
+  $('<img src="/img/spinner.gif">').insertAfter('.overlay__submit')
   $.post({
         url: `/post/comment`,
         dataType: 'json',
@@ -231,20 +244,31 @@ $('main').on('click', '.overlay__submit', (e) => {
           parentAuthor: $comment.data('parent'),
           message: $('.comment-message').val(),
           parentTitle: $comment.data('parent-title'),
-          workoutType: $('.input__workoutType').data('workout'),
-          distance: $('.input__distance').val(),
-          distanceUnit: $('.input__distanceUnit').val(),
+          workoutType,
+          distance,
+          distanceUnit,
           workoutDurationSeconds: $('.input__workoutDuration--seconds').val(),
           workoutDurationHours: $('.input__workoutDuration--hours').val(),
           workoutDurationMinutes: $('.input__workoutDuration--minutes').val()
         }
       }, (response) => {
-          console.log(response)
           if (response.error) {
-            $(`<span>${response.error.error_description}</span>`).insertAfter($comment)
+            $(`<span>${response.error}</span>`).insertAfter($comment.parent())
+            notificationTimeout()
           } else {
-            $('.overlay').hide()
-            // $(`<p>${response.msg}</p>`).insertAfter($comment)
+            $('.overlay, .overlay__bg').fadeOut(200)
+            $('.workouts').prepend(`
+              <div class="workout"
+                data-postid="${response.data.id}"
+                data-athlete="${user.name}"
+                data-permlink="${response.permlink}"
+                data-votes="0"
+              >
+                ${workoutIcons[workoutType]}
+                <p class="workout__details"><a href="/@${user.name}">@${user.name}</a> &middot; completed a ${workoutType} &middot; ${distance}${distanceUnit}</p>
+                <div class="workout__hearts vote workout__hearts--voted-false">&hearts; 0</div>
+              </div>
+              `)
           }
       })
 })
@@ -267,20 +291,21 @@ $('.overlay__bg').on('click', (e) => {
 $('.overlay').hide()
 
 $('.cta').on('click', (e) => {
+  let user = $('main').data('user')
   $('.overlay__bg').show(200)
   $('.overlay').show(100,() => {
     $('.overlay').addClass('overlay--active')
+    if(user){
+      $('.overlay__avatar').attr('src', purify.sanitize(user.profile.profile_image))
+      $('.overlay__username').text(`@${user.name}`)
+    }
   })
 })
 
 
-$('.vote-weight').on('click', (e) => {
-  $('.vote__slider').show()
-})
+$('.vote-weight').on('click', (e) => $('.vote__slider').show() )
 
-$('.slider__close').on('click', (e) => {
-  $('.vote__slider').hide()
-})
+$('.slider__close').on('click', (e) => $('.vote__slider').hide() )
 
 
 $('nav').on('input', '.slider__input', (e) => {
