@@ -12,6 +12,7 @@ const POST_TITLE = 'move-club'
 
 /* POST a vote broadcast to STEEM network. */
 router.post('/vote', util.isAuthenticatedJSON, (req, res) => {
+    steem.setAccessToken(req.session.access_token);
     let postId = req.body.postId
     let voter = req.session.steemconnect.name
     let author = req.body.author
@@ -29,6 +30,7 @@ router.post('/vote', util.isAuthenticatedJSON, (req, res) => {
 
 /* POST a comment broadcast to STEEM network. */
 router.post('/comment',  util.isAuthenticatedJSON, (req, res) => {
+    steem.setAccessToken(req.session.access_token);
     let author = req.session.steemconnect.name
     let permlink = 'move-club-' + util.urlString()
     let title = POST_TITLE
