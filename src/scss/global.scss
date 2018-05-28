@@ -27,6 +27,11 @@ header {
   background-color: #fff;
 }
 
+.nav__actions {
+  float: right;
+  padding: 15px;
+}
+
 footer {
   position: fixed;
   bottom: 0;
@@ -98,7 +103,8 @@ main {
   padding: 15px;
   float: left;
 }
-.view__type {
+
+.view__type, .nav__actions .nav__logout {
   margin: 5px;
   color: #c6c6c6;
   font-size: 18px;
